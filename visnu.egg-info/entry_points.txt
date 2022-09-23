@@ -1,0 +1,4 @@
+
+    [console_scripts]
+    visnu=visnu:visnu
+    
