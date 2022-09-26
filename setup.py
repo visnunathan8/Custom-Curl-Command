@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='visnu',
+    name='httpc',
     packages=find_packages(),
     email='gmartins@fancywhale.ca',
     author='Gui Martins',
@@ -12,6 +12,6 @@ setup(
     version='0.0.1',
     entry_points='''
     [console_scripts]
-    visnu=visnu:visnu
+    httpc=httpc:httpc
     '''
 )

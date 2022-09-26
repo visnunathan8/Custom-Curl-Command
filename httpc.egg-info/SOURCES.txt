@@ -1,0 +1,7 @@
+setup.py
+httpc.egg-info/PKG-INFO
+httpc.egg-info/SOURCES.txt
+httpc.egg-info/dependency_links.txt
+httpc.egg-info/entry_points.txt
+httpc.egg-info/requires.txt
+httpc.egg-info/top_level.txt
