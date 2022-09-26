@@ -67,6 +67,7 @@ def get_connection(host, verbose, v):
 def post_connection(h, d, da, host):
     #d = d[1:-1]
     body = []
+    domain = urlparse(host).netloc
     if d and (len(da)!=0):
         for arg in da:
             body.append(arg)
@@ -74,34 +75,50 @@ def post_connection(h, d, da, host):
     else:
         click.echo("Enable the option of d correctly")
         return;
-        
+    #click.echo(domain)
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    a1.connect((socket.gethostbyname(host), 80))
-    Headers = 'POST /auth HTTP/1.1\r\n'
+    #click.echo(domain)
+    a1.connect(("127.0.0.1", 8081))
+    
+    lengthhh = host.index(domain)
+    urlPath = host[lengthhh + len(domain) : len(host)]
+    #click.echo(urlPath)
+    Headers = 'POST '+urlPath+' HTTP/1.1\r\n'
+    #body = 'login=ocketvisnu@gmail.com&password=Visnu@123'   
+    Headers += 'Host: '+domain+""+'\r\n'
     for p in h:
         Headers += p
-    Headers += "\n"
-    Headers += 'Host: '+host+":80"+'\r\n\r\n'
-    body_bytes = body[0].encode('ascii')
-    header_bytes = Headers.format(
-        content_type="application/x-www-form-urlencoded",
-        content_length=len(body_bytes),
-        host=str(host) + ":80"
-    ).encode('iso-8859-1')
+    Headers += "\r\n"
+   
+    # body_bytes = body[0].encode('ascii')
+    # header_bytes = Headers.format(
+    #     content_type="application/x-www-form-urlencoded",
+    #     content_length=len(body_bytes),
+    #     host=str(domain) + ":80"
+    # ).encode('iso-8859-1')
+    
+    contentLength = "Content-Length: " + str( len( body[0] ) ) + "\r\n\r\n"
 
-
-    payload = header_bytes + body_bytes
-
-    click.echo(payload)
-    p = a1.sendall(payload)
-    click.echo(p)
+    payload = (Headers + contentLength + body[0])
+    #click.echo(payload)
+    
+    p = a1.sendall(payload.encode())
+    #click.echo(p)
+    while True:
+        data = a1.recv(1024).decode()
+        click.echo(data)
+        if data == '':
+            break
 
 
 httpc.add_command(get_connection)
 httpc.add_command(post_connection)
 
 
-# httpc post  www.httpbin.org/post -h Content-Type:application/json   --d '{"Assignment": 1, "TEST":2}' 
+#curl post -H 'Content-Type: application/json' -d '{"username":"rocketvisnu@gmail.com","password":"Visnu@123"}' https://www.reqbin.com/api/v1/account/login
 
 
-# httpc post -h 'Content-Type: application/json' --d '{"login":"rocketvisnu@gmail.com","password":"Visnu@123"}' https://reqbin.com/echo/post/json
+#httpc post -h 'Content-Type: application/json' --d '{ "type": "3", "password": "admin", "employeeId": "admin"}' http://www.localhost.com/userAccount/adduseraccount/
+
+
+#curl -H 'Content-Type: application/json' -d '{ "type": "3", "password": "admin", "employeeId": "admin"}' http://localhost:8081/userAccount/adduseraccount/
