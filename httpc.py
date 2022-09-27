@@ -63,8 +63,9 @@ def get_connection(host, verbose, v):
 @click.option('-h', multiple=True)
 @click.option('--d/--nd', default=False)
 @click.argument('da', nargs=-1)
+@click.option('-f')
 @click.argument('host')
-def post_connection(h, d, da, host):
+def post_connection(h, d, da, f, host):
     #d = d[1:-1]
     body = []
     domain = urlparse(host).netloc
@@ -72,10 +73,11 @@ def post_connection(h, d, da, host):
         for arg in da:
             body.append(arg)
         
-    else:
-        click.echo("Enable the option of d correctly")
-        return;
-    #click.echo(domain)
+    if f:
+        with open(f, "r") as f:
+            body = f.read()
+    #click.echo(body)
+    #click.echo("ASDFASDFAWEFAWEFAWEFWAEFAWEFAWEFAWEFAWEFAWFE")
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #click.echo(domain)
     a1.connect(("127.0.0.1", 8081))
@@ -96,10 +98,14 @@ def post_connection(h, d, da, host):
     #     content_length=len(body_bytes),
     #     host=str(domain) + ":80"
     # ).encode('iso-8859-1')
-    
-    contentLength = "Content-Length: " + str( len( body[0] ) ) + "\r\n\r\n"
+    if d:
+        contentLength = "Content-Length: " + str(len(body[0])) + "\r\n\r\n"
+        payload = (Headers + contentLength + body[0])
+    else :
+        contentLength = "Content-Length: " + str(len(body)) + "\r\n\r\n"
+        payload = (Headers + contentLength + body)
 
-    payload = (Headers + contentLength + body[0])
+    
     #click.echo(payload)
     
     p = a1.sendall(payload.encode())
@@ -122,3 +128,6 @@ httpc.add_command(post_connection)
 
 
 #curl -H 'Content-Type: application/json' -d '{ "type": "3", "password": "admin", "employeeId": "admin"}' http://localhost:8081/userAccount/adduseraccount/
+
+#with file
+#httpc post -h 'Content-Type: application/json' -f '/Users/macbook/Desktop/COURSE WORK/Networks/Sockets/sampledata.txt' http://www.localhost.com/userAccount/adduseraccount/
