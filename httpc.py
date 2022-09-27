@@ -1,6 +1,7 @@
 from email import header
 from email.policy import default
 import json
+from pydoc import cli
 import socket
 import click
 import http.client as httplib
@@ -64,11 +65,17 @@ def get_connection(host, verbose, v):
 @click.option('--d/--nd', default=False)
 @click.argument('da', nargs=-1)
 @click.option('-f')
+@click.option('-o')
 @click.argument('host')
-def post_connection(h, d, da, f, host):
+def post_connection(h, d, da, f, o, host):
     #d = d[1:-1]
     body = []
     domain = urlparse(host).netloc
+
+    if d and f:
+        print("Both d and f option is not applicable together")
+        return
+
     if d and (len(da)!=0):
         for arg in da:
             body.append(arg)
@@ -76,6 +83,7 @@ def post_connection(h, d, da, f, host):
     if f:
         with open(f, "r") as f:
             body = f.read()
+    f.close()        
     #click.echo(body)
     #click.echo("ASDFASDFAWEFAWEFAWEFWAEFAWEFAWEFAWEFAWEFAWFE")
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -105,17 +113,17 @@ def post_connection(h, d, da, f, host):
         contentLength = "Content-Length: " + str(len(body)) + "\r\n\r\n"
         payload = (Headers + contentLength + body)
 
-    
-    #click.echo(payload)
-    
     p = a1.sendall(payload.encode())
-    #click.echo(p)
     while True:
-        data = a1.recv(1024).decode()
+        data = a1.recv(4094).decode()
         click.echo(data)
-        if data == '':
+        if o:
+            with open(o, "a") as f:
+                f.write(data)
+        if not data:
             break
-
+    f.close() 
+    
 
 httpc.add_command(get_connection)
 httpc.add_command(post_connection)
@@ -131,3 +139,7 @@ httpc.add_command(post_connection)
 
 #with file
 #httpc post -h 'Content-Type: application/json' -f '/Users/macbook/Desktop/COURSE WORK/Networks/Sockets/sampledata.txt' http://www.localhost.com/userAccount/adduseraccount/
+
+
+# outputing a file 
+# httpc post -h 'Content-Type: application/json' -f '/Users/macbook/Desktop/COURSE WORK/Networks/Sockets/sampledata.txt' -o '/Users/macbook/Desktop/COURSE WORK/Networks/Sockets/sampleoutput.txt' http://www.localhost.com/userAccount/adduseraccount/
