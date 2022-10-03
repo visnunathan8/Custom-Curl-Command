@@ -7,18 +7,14 @@ import click
 import http.client as httplib
 from urllib.parse import urlparse
 
-
-
 @click.group()
 def httpc():
     '''
-    Fancy Commands to manage your assets
+    Commands to work with HTTPC
     '''
     pass
 
-
 def get_connection_extra(host ):
-    click.echo("!!!")
     domain = urlparse(host).netloc
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     a1.connect((socket.gethostbyname(domain), 80))
@@ -30,14 +26,6 @@ def get_connection_extra(host ):
     with a1:
         data = a1.recv(1024)
         click.echo(data.decode())
-
-
-# @click.group(name='get')
-# def get_group():
-#     '''
-#     Group of commands to get something
-#     '''
-#     pass
 
 def strip_http_headers(http_reply):
     p = http_reply.find('\r\n\r\n')
@@ -51,11 +39,10 @@ def strip_http_headers(http_reply):
 @click.option('-v/-nv', default=False)
 def get_connection(host, verbose, v):
     '''
-    Gets the connection
+    GETS the connection
     '''
     domain = urlparse(host).netloc
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #click.echo(domain)
     a1.connect((socket.gethostbyname(domain), 80))
     lengthhh = host.index(domain)
     urlPath = host[lengthhh + len(domain) : len(host)]
@@ -94,50 +81,34 @@ def get_connection(host, verbose, v):
 @click.argument('da', nargs=-1)
 @click.option('-f')
 @click.option('-o')
+@click.option('--verbose/--no-verbose', default=False)
+@click.option('-v/-nv', default=False)
 @click.argument('host')
-def post_connection(h, d, da, f, o, host):
-    #d = d[1:-1]
+def post_connection(h, d, da, f, o, host, verbose, v):
+    '''
+    POSTS the connection
+    '''
     body = []
     domain = urlparse(host).netloc
 
     if d and f:
         print("Both d and f option is not applicable together")
         return
-
     if d and (len(da)!=0):
         for arg in da:
             body.append(arg)
-        
     if f:
         with open(f, "r") as f:
             body = f.read()
-            
-    #click.echo(body)
-    #click.echo("ASDFASDFAWEFAWEFAWEFWAEFAWEFAWEFAWEFAWEFAWFE")
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #click.echo(domain)
     a1.connect(("127.0.0.1", 8081))
-    
     lengthhh = host.index(domain)
-
-   
-
     urlPath = host[lengthhh + len(domain) : len(host)]
-    #click.echo(urlPath)
     Headers = 'POST '+urlPath+' HTTP/1.1\r\n'
-    #body = 'login=rocketvisnu@gmail.com&password=Visnu@123'   
     Headers += 'Host: '+domain+""+'\r\n'
     for p in h:
         Headers += p
     Headers += "\r\n"
-   
-    # body_bytes = body[0].encode('ascii')
-    # header_bytes = Headers.format(
-    #     content_type="application/x-www-form-urlencoded",
-    #     content_length=len(body_bytes),
-    #     host=str(domain) + ":80"
-    # ).encode('iso-8859-1')
-
     if not body:
         body = ""
     if d:
@@ -148,19 +119,32 @@ def post_connection(h, d, da, f, o, host):
         payload = (Headers + contentLength + body)
 
     p = a1.sendall(payload.encode())
-    while True:
+    if verbose or v:
+        header_data_Avail = False
+    else :
+        header_data_Avail = True
+    with a1:
         data = a1.recv(1024).decode()
-        click.echo(data)
+        
         if o:
             with open(o, "a") as f:
                 f.write(data)
-        if not data:
-            break 
+        if(header_data_Avail) :
+            dddd = strip_http_headers(data)
+            header_data_Avail = False
+        else :
+            val = "Trying.. 127.0.0.1:8081\nConnected to "+domain+" (127.0.0.1) port : 8081\n"+Headers+"\n";
+            dddd = val+data
+        click.echo(dddd)
     
 
 httpc.add_command(get_connection)
 httpc.add_command(post_connection)
 
+
+#httpc get https://www.httpbin.org    
+
+#httpc get https://www.stackoverflow.com/questions/9573244/how-to-check-if-the-string-is-empty -v                       
 
 #curl post -H 'Content-Type: application/json' -d '{"username":"rocketvisnu@gmail.com","password":"Visnu@123"}' https://www.reqbin.com/api/v1/account/login
 
