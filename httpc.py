@@ -1,6 +1,5 @@
 from email import header
 from email.policy import default
-import json
 from pydoc import cli
 import socket
 import click
