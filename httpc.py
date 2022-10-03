@@ -17,6 +17,21 @@ def httpc():
     pass
 
 
+def get_connection_extra(host ):
+    click.echo("!!!")
+    domain = urlparse(host).netloc
+    a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    a1.connect((socket.gethostbyname(domain), 80))
+    lengthhh = host.index(domain)
+    urlPath = host[lengthhh + len(domain) : len(host)]
+    a2 = 'GET '+urlPath+' HTTP/1.1\r\n' + 'Host: '+domain+'\r\n\r\n'
+    click.echo(a2)
+    p = a1.send(a2.encode())
+    with a1:
+        data = a1.recv(1024)
+        click.echo(data.decode())
+
+
 # @click.group(name='get')
 # def get_group():
 #     '''
@@ -40,9 +55,12 @@ def get_connection(host, verbose, v):
     '''
     domain = urlparse(host).netloc
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #click.echo(domain)
     a1.connect((socket.gethostbyname(domain), 80))
     lengthhh = host.index(domain)
     urlPath = host[lengthhh + len(domain) : len(host)]
+    if not urlPath:
+        urlPath = '/'
     a2 = 'GET '+urlPath+' HTTP/1.1\r\n' + 'Host: '+domain+'\r\n\r\n'
     p = a1.send(a2.encode())
     with a1:
@@ -51,11 +69,21 @@ def get_connection(host, verbose, v):
         else :
             header_data_Avail = True
         data = a1.recv(1024)
+        if "301".encode() in data:
+            for line in data.decode().splitlines():
+                if "Set-Cookie" in line:
+                    cookie = line.replace("Set-Cookie: ", "").split(";")[0]
+
+                if "Location" in line:
+                    location = line.replace("Location: ", "")
+            get_connection_extra(location)
+            return;
         if(header_data_Avail) :
             dddd = strip_http_headers(data.decode())
             header_data_Avail = False
         else :
-            dddd = data
+            val = "Trying.."+socket.gethostbyname(domain)+":80\nConnected to "+domain+" ("+socket.gethostbyname(domain)+") port : 80\n"+a2;
+            dddd = val+data.decode()
         click.echo(dddd)
 
 
@@ -83,7 +111,7 @@ def post_connection(h, d, da, f, o, host):
     if f:
         with open(f, "r") as f:
             body = f.read()
-    f.close()        
+            
     #click.echo(body)
     #click.echo("ASDFASDFAWEFAWEFAWEFWAEFAWEFAWEFAWEFAWEFAWFE")
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -91,10 +119,13 @@ def post_connection(h, d, da, f, o, host):
     a1.connect(("127.0.0.1", 8081))
     
     lengthhh = host.index(domain)
+
+   
+
     urlPath = host[lengthhh + len(domain) : len(host)]
     #click.echo(urlPath)
     Headers = 'POST '+urlPath+' HTTP/1.1\r\n'
-    #body = 'login=ocketvisnu@gmail.com&password=Visnu@123'   
+    #body = 'login=rocketvisnu@gmail.com&password=Visnu@123'   
     Headers += 'Host: '+domain+""+'\r\n'
     for p in h:
         Headers += p
@@ -106,6 +137,9 @@ def post_connection(h, d, da, f, o, host):
     #     content_length=len(body_bytes),
     #     host=str(domain) + ":80"
     # ).encode('iso-8859-1')
+
+    if not body:
+        body = ""
     if d:
         contentLength = "Content-Length: " + str(len(body[0])) + "\r\n\r\n"
         payload = (Headers + contentLength + body[0])
@@ -115,14 +149,13 @@ def post_connection(h, d, da, f, o, host):
 
     p = a1.sendall(payload.encode())
     while True:
-        data = a1.recv(4094).decode()
+        data = a1.recv(1024).decode()
         click.echo(data)
         if o:
             with open(o, "a") as f:
                 f.write(data)
         if not data:
-            break
-    f.close() 
+            break 
     
 
 httpc.add_command(get_connection)

@@ -25,3 +25,39 @@ Date: Tue, 27 Sep 2022 04:45:40 GMT
 {"type":"3","password":"$2a$10$xjVLj4CFmMc0Na6kLXz6Deyt/bcJdyFbvK.TUEVLZ4XeMP3uees.W","employeeId":"admin"}
 0
 
+HTTP/1.1 201 
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 27 Sep 2022 05:04:39 GMT
+
+6b
+{"type":"3","password":"$2a$10$kX7YFcdqbb5WjsSorvGehO6KgfeOkRy464GTBwV6nSU/ODP3ASY/S","employeeId":"admin"}
+0
+
+HTTP/1.1 201 
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 27 Sep 2022 20:42:09 GMT
+
+6b
+{"type":"3","password":"$2a$10$WcnBwYxpeIz1xWb0mrFOCOthVpOrmkMQAgXLkICYev.8n.C8dVasi","employeeId":"admin"}
+0
+
+HTTP/1.1 201 
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Wed, 28 Sep 2022 00:52:54 GMT
+
+6b
+{"type":"3","password":"$2a$10$Nt.qg6elccDrcF2T6ja/bO68yphSmB8VhegZghjCtmFkX2o55nQVy","employeeId":"admin"}
+0
+
+HTTP/1.1 201 
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Wed, 28 Sep 2022 03:46:00 GMT
+
+6b
+{"type":"3","password":"$2a$10$g/jVQGzssL6osnXBts/ul.KR6fJMmFK82uMP0.DupCMSIZvVOxGe6","employeeId":"admin"}
+0
+
