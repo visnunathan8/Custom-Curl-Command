@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 setup(
     name='httpc',
     packages=find_packages(),
-    email='gmartins@fancywhale.ca',
-    author='Gui Martins',
+    email='visnu8898@gmail.com',
+    author='Visnunathan',
     install_requires=[
         'click',
         'requests'
@@ -15,3 +15,6 @@ setup(
     httpc=httpc:httpc
     '''
 )
+
+#TO INSTALL THE HTTPC COMMAND ON YOUR LOCAL MACHINE
+#pip install --editable .
