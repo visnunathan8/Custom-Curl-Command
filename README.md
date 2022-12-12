@@ -1,4 +1,5 @@
-# socket_programming
+# Custom curl like command using socket programming
+# We gonna name the command as httpc and you customize it based on your requirement.
 
 
 #TO INSTALL THE HTTPC COMMAND ON YOUR LOCAL MACHINE
