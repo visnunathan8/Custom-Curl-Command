@@ -1,5 +1,5 @@
 # Custom curl like command using socket programming
-# We gonna name the command as httpc and you customize it based on your requirement.
+## We gonna name the command as httpc and you customize it based on your requirement.
 
 
 #TO INSTALL THE HTTPC COMMAND ON YOUR LOCAL MACHINE
@@ -29,8 +29,8 @@
 -v option represents the verbose nature of the command -> it gives all the header details along with the request.
 <img width="1015" alt="Screenshot 2022-12-11 at 9 29 48 PM" src="https://user-images.githubusercontent.com/30067377/206948171-84b483ab-1a7e-47fb-8547-c20314177795.png">
 
-# The below commands are used for testing my spring boot application(Attendance management system which is there in my github account)
-# For using this you have to comment out two lines and uncomment two lines
+## The below commands are used for testing my spring boot application(Attendance management system which is there in my github account)
+## For using this you have to comment out two lines and uncomment two lines
  curl post -H 'Content-Type: application/json' -d '{"username":"rocketvisnu@gmail.com","password":"Visnu@123"}' https://www.reqbin.com/api/v1/account/login
  httpc post -h 'Content-Type: application/json' --d '{ "type": "3", "password": "admin", "employeeId": "admin"}'          
  http://www.localhost.com/userAccount/adduseraccount/
