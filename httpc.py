@@ -111,8 +111,10 @@ def post_connection(h, d, da, f, o, host, verbose, v):
             body = f.read()
     a1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #For LOCALHOST
-    a1.connect(("127.0.0.1", 8081))
-    #a1.connect((socket.gethostbyname(domain), 80))
+    #uncomment the below line to execute Attendance management system project
+    #a1.connect(("127.0.0.1", 8081))
+    #comment the below line to execute Attendance management system project
+    a1.connect((socket.gethostbyname(domain), 80))
     lengthhh = host.index(domain)
     urlPath = host[lengthhh + len(domain) : len(host)]
     Headers = 'POST '+urlPath+' HTTP/1.1\r\n'
@@ -145,8 +147,10 @@ def post_connection(h, d, da, f, o, host, verbose, v):
             header_data_Avail = False
         else :
             #For LOCALHOST
-            val = "Trying.. 127.0.0.1:8081\nConnected to "+domain+" (127.0.0.1) port : 8081\n"+Headers+"\n";
-            #val = "Trying.. "+socket.gethostbyname(domain)+":80\nConnected to "+domain+" ("+socket.gethostbyname(domain)+") port : 80\n"+Headers+"\n";
+            #uncomment the below line to execute Attendance management system project
+            #val = "Trying.. 127.0.0.1:8081\nConnected to "+domain+" (127.0.0.1) port : 8081\n"+Headers+"\n";
+            #comment the below line to execute Attendance management system project
+            val = "Trying.. "+socket.gethostbyname(domain)+":80\nConnected to "+domain+" ("+socket.gethostbyname(domain)+") port : 80\n"+Headers+"\n";
             dddd = val+data
         click.echo(dddd)
     
